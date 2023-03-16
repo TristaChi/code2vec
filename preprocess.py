@@ -30,10 +30,13 @@ def process_file(file_path, data_file_role, dataset_name, word_to_count, path_to
     with open(output_path, 'w') as outfile:
         with open(file_path, 'r') as file:
             for line in file:
+                # example:
+                # get|name string,362150388,METHOD_NAME string,271383424,this string,58900971,name METHOD_NAME,1127972839,this METHOD_NAME,915490386,name this,-587441100,name
                 parts = line.rstrip('\n').split(' ')
                 target_name = parts[0]
                 contexts = parts[1:]
-
+                
+                # len(contexts) is 6 in the example above
                 if len(contexts) > max_unfiltered:
                     max_unfiltered = len(contexts)
                 sum_total += len(contexts)
@@ -75,11 +78,15 @@ def process_file(file_path, data_file_role, dataset_name, word_to_count, path_to
 
 
 def context_full_found(context_parts, word_to_count, path_to_count):
+    if len(context_parts) < 3:
+        return False
     return context_parts[0] in word_to_count \
            and context_parts[1] in path_to_count and context_parts[2] in word_to_count
 
 
 def context_partial_found(context_parts, word_to_count, path_to_count):
+    if len(context_parts) < 3:
+        return False
     return context_parts[0] in word_to_count \
            or context_parts[1] in path_to_count or context_parts[2] in word_to_count
 
